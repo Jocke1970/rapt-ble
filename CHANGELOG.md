@@ -2,6 +2,15 @@
 
 <!--next-version-placeholder-->
 
+## Unreleased
+
+### Feature
+
+* Add initial support for the RAPT Bluetooth Thermometer iBeacon advertisements.
+* Decode thermometer temperature from fixed-point Kelvin and expose it in Celsius.
+* Add regression tests based on captured RAPT Bluetooth Thermometer advertisements.
+* Preserve existing RAPT Pill parser behaviour.
+
 ## v0.1.2 (2023-06-16)
 
 ### Fix
