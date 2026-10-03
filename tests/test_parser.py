@@ -290,12 +290,12 @@ RAPT_TEMP_UUID = bytes.fromhex("4b6567b722314977852625b74c616e64")
 def rapt_temp_service_info(raw_temperature: int) -> BluetoothServiceInfo:
     """Build a service info object matching a captured RAPT Temp iBeacon packet."""
     payload = (
-        b"\\x4c\\x00"
-        + b"\\x02\\x15"
+        bytes.fromhex("4c00")
+        + bytes.fromhex("0215")
         + RAPT_TEMP_UUID
         + struct.pack(">H", raw_temperature)
-        + b"\\x43\\x00"
-        + b"\\x00"
+        + bytes.fromhex("4300")
+        + bytes.fromhex("00")
     )
     return bytes_to_service_info(payload)
 
@@ -358,8 +358,8 @@ def test_rapt_temperature_rejects_other_ibeacon_uuid():
     device = RAPTTemperatureBluetoothDeviceData()
     data = rapt_temp_service_info(0x4CAA)
     data.manufacturer_data[76] = (
-        b"\\x02\\x15"
+        bytes.fromhex("0215")
         + bytes.fromhex("00112233445566778899aabbccddeeff")
-        + b"\\x4c\\xaa\\x43\\x00\\x00"
+        + bytes.fromhex("4caa430000")
     )
     assert not device.supported(data)
