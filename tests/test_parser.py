@@ -12,7 +12,11 @@ from sensor_state_data import (
 )
 
 from rapt_ble.custom_state_data import DeviceClass, Units
-from rapt_ble.parser import RAPTPillBluetoothDeviceData
+from rapt_ble.parser import (
+    RAPTPillBluetoothDeviceData,
+    RAPTTemperatureBluetoothDeviceData,
+    decode_rapt_temperature,
+)
 
 
 @pytest.fixture(autouse=True)
@@ -278,3 +282,84 @@ def test_parse_metrics_v2_no_velocity():
             ),
         },
     )
+
+
+RAPT_TEMP_UUID = bytes.fromhex("4b6567b722314977852625b74c616e64")
+
+
+def rapt_temp_service_info(raw_temperature: int) -> BluetoothServiceInfo:
+    """Build a service info object matching a captured RAPT Temp iBeacon packet."""
+    payload = (
+        bytes.fromhex("4c00")
+        + bytes.fromhex("0215")
+        + RAPT_TEMP_UUID
+        + struct.pack(">H", raw_temperature)
+        + bytes.fromhex("4300")
+        + bytes.fromhex("00")
+    )
+    return bytes_to_service_info(payload)
+
+
+def test_decode_rapt_temperature():
+    # Captured at approximately 33.6 C: 0x4CAA = 19626.
+    assert decode_rapt_temperature(0x4CAA) == 33.51
+    # Captured during the warm-up run near 43.1 C: 0x4F10 = 20240.
+    assert decode_rapt_temperature(0x4F10) == 43.1
+
+
+def test_rapt_temperature_device_supported():
+    device = RAPTTemperatureBluetoothDeviceData()
+    assert device.supported(rapt_temp_service_info(0x4CAA))
+
+
+def test_parse_rapt_temperature():
+    device = RAPTTemperatureBluetoothDeviceData()
+    result = device.update(rapt_temp_service_info(0x4CAA))
+
+    assert result == SensorUpdate(
+        title="RAPT Temp 4455",
+        devices={
+            None: SensorDeviceInfo(
+                name="RAPT Temp 4455",
+                manufacturer="RAPT",
+                model="RAPT Bluetooth Thermometer",
+                hw_version=None,
+                sw_version=None,
+            ),
+        },
+        entity_descriptions={
+            DeviceKey(key="temperature", device_id=None): SensorDescription(
+                device_key=DeviceKey(key="temperature", device_id=None),
+                device_class=DeviceClass.TEMPERATURE,
+                native_unit_of_measurement=Units.TEMP_CELSIUS,
+            ),
+            DeviceKey(key="signal_strength", device_id=None): SensorDescription(
+                device_key=DeviceKey(key="signal_strength", device_id=None),
+                device_class=DeviceClass.SIGNAL_STRENGTH,
+                native_unit_of_measurement=Units.SIGNAL_STRENGTH_DECIBELS_MILLIWATT,
+            ),
+        },
+        entity_values={
+            DeviceKey(key="temperature", device_id=None): SensorValue(
+                device_key=DeviceKey(key="temperature", device_id=None),
+                name="Temperature",
+                native_value=33.51,
+            ),
+            DeviceKey(key="signal_strength", device_id=None): SensorValue(
+                device_key=DeviceKey(key="signal_strength", device_id=None),
+                name="Signal Strength",
+                native_value=-60,
+            ),
+        },
+    )
+
+
+def test_rapt_temperature_rejects_other_ibeacon_uuid():
+    device = RAPTTemperatureBluetoothDeviceData()
+    data = rapt_temp_service_info(0x4CAA)
+    data.manufacturer_data[76] = (
+        bytes.fromhex("0215")
+        + bytes.fromhex("00112233445566778899aabbccddeeff")
+        + bytes.fromhex("4caa430000")
+    )
+    assert not device.supported(data)
