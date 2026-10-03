@@ -5,7 +5,11 @@ from __future__ import annotations
 from sensor_state_data import DeviceKey, SensorUpdate
 
 from .custom_state_data import DeviceClass, Units
-from .parser import RAPTPillBluetoothDeviceData
+from .parser import (
+    RAPTPillBluetoothDeviceData,
+    RAPTTemperatureBluetoothDeviceData,
+    decode_rapt_temperature,
+)
 
 __version__ = "2.0.0"
 
@@ -14,5 +18,7 @@ __all__ = [
     "DeviceKey",
     "SensorUpdate",
     "RAPTPillBluetoothDeviceData",
+    "RAPTTemperatureBluetoothDeviceData",
+    "decode_rapt_temperature",
     "Units",
 ]
