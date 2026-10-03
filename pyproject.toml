@@ -1,11 +1,11 @@
 [tool.poetry]
 name = "rapt-ble"
 version = "2.0.0"
-description = "Parser for the RAPT Pill hydrometer BLE packets."
+description = "Parser for RAPT BLE advertisements, including the RAPT Pill hydrometer and RAPT Bluetooth Thermometer."
 authors = ["Jan Čermák <sairon@sairon.cz>"]
 license = "MIT"
 readme = "README.md"
-repository = "https://github.com/sairon/rapt-ble"
+repository = "https://github.com/Jocke1970/rapt-ble"
 documentation = "https://rapt-ble.readthedocs.io"
 classifiers = [
     "Development Status :: 2 - Pre-Alpha",
@@ -24,8 +24,9 @@ packages = [
 ]
 
 [tool.poetry.urls]
-"Bug Tracker" = "https://github.com/sairon/rapt-ble/issues"
-"Changelog" = "https://github.com/sairon/rapt-ble/blob/main/CHANGELOG.md"
+"Bug Tracker" = "https://github.com/Jocke1970/rapt-ble/issues"
+"Changelog" = "https://github.com/Jocke1970/rapt-ble/blob/main/CHANGELOG.md"
+"Upstream" = "https://github.com/sairon/rapt-ble"
 
 [tool.poetry.dependencies]
 python = "^3.11"
