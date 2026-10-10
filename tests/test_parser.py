@@ -380,6 +380,7 @@ def test_rapt_temperature_battery_percentage():
     device = RAPTTemperatureBluetoothDeviceData()
     result = device.update(rapt_temp_service_info(0x4CAA, battery=64))
 
+    assert result is not None
     assert result.entity_values[
         DeviceKey(key="battery", device_id=None)
     ].native_value == 64
