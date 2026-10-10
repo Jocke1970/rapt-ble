@@ -50,6 +50,7 @@ The thermometer parser currently:
   `4b6567b7-2231-4977-8526-25b74c616e64`
 - decodes the advertised temperature
 - exposes temperature in degrees Celsius
+- decodes and exposes battery percentage
 - exposes Bluetooth signal strength through the underlying Bluetooth data library
 - ignores unrelated iBeacon UUIDs
 
@@ -60,6 +61,18 @@ fixed-point Kelvin value:
 
 This decoding has been verified against captured advertisements from a physical
 RAPT Bluetooth Thermometer and is covered by regression tests.
+
+The battery percentage is carried in the high byte of the iBeacon `minor`
+field. This has been validated against live hardware observations, including a
+displayed two-of-three battery-bar state while the advertised value moved from
+67% to 66% and then 64%.
+
+The low byte of the `minor` field is still unknown. It has remained `0` in
+the captures observed so far and is exposed only as a temporary diagnostic
+during validation.
+
+See [RAPT Bluetooth Thermometer protocol notes](docs/thermometer_protocol.md)
+for the current byte map, evidence and upstream-readiness notes.
 
 ## Installation
 
@@ -78,6 +91,12 @@ upstream contribution is proposed. The implementation lives on the normal
 development path:
 
 `dev -> beta -> main`
+
+The known temperature and battery fields are considered decoded. The only
+remaining reverse-engineering item is the low byte of the iBeacon `minor`
+field. If no stable meaning can be identified, the temporary diagnostic sensor
+will be removed before the upstream pull request so the contribution contains
+only verified protocol fields.
 
 ## Upstream
 
