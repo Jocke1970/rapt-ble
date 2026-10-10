@@ -3,10 +3,6 @@
 from typing import Any, override
 
 import probatio
-from rapt_ble import (
-    RAPTPillBluetoothDeviceData,
-    RAPTTemperatureBluetoothDeviceData,
-)
 
 from homeassistant.components import bluetooth
 from homeassistant.components.bluetooth import (
@@ -15,6 +11,11 @@ from homeassistant.components.bluetooth import (
 )
 from homeassistant.config_entries import ConfigFlow, ConfigFlowResult
 from homeassistant.const import CONF_ADDRESS
+
+from rapt_ble import (
+    RAPTPillBluetoothDeviceData,
+    RAPTTemperatureBluetoothDeviceData,
+)
 
 from .const import DOMAIN
 
@@ -67,9 +68,10 @@ class RAPTPillConfigFlow(ConfigFlow, domain=DOMAIN):
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
         """Confirm discovery."""
-        assert self._discovered_device is not None
+        if self._discovered_device is None or self._discovery_info is None:
+            raise RuntimeError("RAPT BLE discovery context is incomplete")
+
         device = self._discovered_device
-        assert self._discovery_info is not None
         discovery_info = self._discovery_info
         title = device.title or device.get_device_name() or discovery_info.name
 

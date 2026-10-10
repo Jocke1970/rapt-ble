@@ -106,7 +106,7 @@ def sensor_update_to_bluetooth_data_update(
             description.native_unit_of_measurement,
         )
         if ha_description is not None:
-            descriptions[_device_key_to_bluetooth_entity_key(device_key)] = ha_description
+            descriptions[_device_key_to_bluetooth_entity_key(device_key)] = (\n                ha_description\n            )
 
     return PassiveBluetoothDataUpdate(
         devices={

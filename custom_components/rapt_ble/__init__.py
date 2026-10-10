@@ -4,11 +4,6 @@ import logging
 from collections.abc import Callable
 
 from home_assistant_bluetooth import BluetoothServiceInfo
-from rapt_ble import (
-    RAPTPillBluetoothDeviceData,
-    RAPTTemperatureBluetoothDeviceData,
-    SensorUpdate,
-)
 
 from homeassistant.components.bluetooth import BluetoothScanningMode
 from homeassistant.components.bluetooth.passive_update_processor import (
@@ -17,6 +12,12 @@ from homeassistant.components.bluetooth.passive_update_processor import (
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
+
+from rapt_ble import (
+    RAPTPillBluetoothDeviceData,
+    RAPTTemperatureBluetoothDeviceData,
+    SensorUpdate,
+)
 
 PLATFORMS: list[Platform] = [Platform.SENSOR]
 
@@ -43,7 +44,8 @@ def _combined_update_method() -> Callable[[BluetoothServiceInfo], SensorUpdate |
 async def async_setup_entry(hass: HomeAssistant, entry: RAPTBLEConfigEntry) -> bool:
     """Set up RAPT BLE device from a config entry."""
     address = entry.unique_id
-    assert address is not None
+    if address is None:
+        raise RuntimeError("RAPT BLE config entry is missing a unique ID")
 
     coordinator = PassiveBluetoothProcessorCoordinator(
         hass,
