@@ -38,12 +38,23 @@ class RAPTTemperatureBluetoothDeviceData(BluetoothData):
             return
 
         (raw_temperature,) = unpack(">H", data[18:20])
+        (raw_minor,) = unpack(">H", data[20:22])
+        (tx_power,) = unpack(">b", data[22:23])
+        minor_hi = data[20]
+        minor_lo = data[21]
         temperature = decode_rapt_temperature(raw_temperature)
 
         _LOGGER.debug(
-            "Parsed RAPT Bluetooth Thermometer data: raw=%d temperature=%s",
+            "Parsed RAPT Bluetooth Thermometer data: "
+            "payload=%s raw_major=%d temperature=%s raw_minor=%d "
+            "minor_hi=%d minor_lo=%d tx_power=%d",
+            data.hex(),
             raw_temperature,
             temperature,
+            raw_minor,
+            minor_hi,
+            minor_lo,
+            tx_power,
         )
 
         self.set_device_manufacturer("RAPT")
@@ -52,6 +63,45 @@ class RAPTTemperatureBluetoothDeviceData(BluetoothData):
         self.set_device_name(f"RAPT Temp {mac_suffix}")
         self.set_title(f"RAPT Temp {mac_suffix}")
         self.update_predefined_sensor(SensorLibrary.TEMPERATURE__CELSIUS, temperature)
+
+        # Temporary reverse-engineering sensors. These expose the remaining
+        # iBeacon fields so their behaviour can be correlated with battery
+        # level and other device state during hardware testing.
+        self.update_sensor(
+            key="debug_raw_major",
+            name="Debug Raw Major",
+            device_class=DeviceClass.DEBUG,
+            native_unit_of_measurement=None,
+            native_value=raw_temperature,
+        )
+        self.update_sensor(
+            key="debug_raw_minor",
+            name="Debug Raw Minor",
+            device_class=DeviceClass.DEBUG,
+            native_unit_of_measurement=None,
+            native_value=raw_minor,
+        )
+        self.update_sensor(
+            key="debug_minor_hi",
+            name="Debug Minor High Byte",
+            device_class=DeviceClass.DEBUG,
+            native_unit_of_measurement=None,
+            native_value=minor_hi,
+        )
+        self.update_sensor(
+            key="debug_minor_lo",
+            name="Debug Minor Low Byte",
+            device_class=DeviceClass.DEBUG,
+            native_unit_of_measurement=None,
+            native_value=minor_lo,
+        )
+        self.update_sensor(
+            key="debug_tx_power",
+            name="Debug TX Power",
+            device_class=DeviceClass.DEBUG,
+            native_unit_of_measurement=None,
+            native_value=tx_power,
+        )
 
 
 RAPTPillMetrics = namedtuple(

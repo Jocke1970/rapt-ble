@@ -338,6 +338,31 @@ def test_parse_rapt_temperature():
                 device_class=DeviceClass.SIGNAL_STRENGTH,
                 native_unit_of_measurement=Units.SIGNAL_STRENGTH_DECIBELS_MILLIWATT,
             ),
+            DeviceKey(key="debug_raw_major", device_id=None): SensorDescription(
+                device_key=DeviceKey(key="debug_raw_major", device_id=None),
+                device_class=DeviceClass.DEBUG,
+                native_unit_of_measurement=None,
+            ),
+            DeviceKey(key="debug_raw_minor", device_id=None): SensorDescription(
+                device_key=DeviceKey(key="debug_raw_minor", device_id=None),
+                device_class=DeviceClass.DEBUG,
+                native_unit_of_measurement=None,
+            ),
+            DeviceKey(key="debug_minor_hi", device_id=None): SensorDescription(
+                device_key=DeviceKey(key="debug_minor_hi", device_id=None),
+                device_class=DeviceClass.DEBUG,
+                native_unit_of_measurement=None,
+            ),
+            DeviceKey(key="debug_minor_lo", device_id=None): SensorDescription(
+                device_key=DeviceKey(key="debug_minor_lo", device_id=None),
+                device_class=DeviceClass.DEBUG,
+                native_unit_of_measurement=None,
+            ),
+            DeviceKey(key="debug_tx_power", device_id=None): SensorDescription(
+                device_key=DeviceKey(key="debug_tx_power", device_id=None),
+                device_class=DeviceClass.DEBUG,
+                native_unit_of_measurement=None,
+            ),
         },
         entity_values={
             DeviceKey(key="temperature", device_id=None): SensorValue(
@@ -349,6 +374,31 @@ def test_parse_rapt_temperature():
                 device_key=DeviceKey(key="signal_strength", device_id=None),
                 name="Signal Strength",
                 native_value=-60,
+            ),
+            DeviceKey(key="debug_raw_major", device_id=None): SensorValue(
+                device_key=DeviceKey(key="debug_raw_major", device_id=None),
+                name="Debug Raw Major",
+                native_value=0x4CAA,
+            ),
+            DeviceKey(key="debug_raw_minor", device_id=None): SensorValue(
+                device_key=DeviceKey(key="debug_raw_minor", device_id=None),
+                name="Debug Raw Minor",
+                native_value=0x4300,
+            ),
+            DeviceKey(key="debug_minor_hi", device_id=None): SensorValue(
+                device_key=DeviceKey(key="debug_minor_hi", device_id=None),
+                name="Debug Minor High Byte",
+                native_value=0x43,
+            ),
+            DeviceKey(key="debug_minor_lo", device_id=None): SensorValue(
+                device_key=DeviceKey(key="debug_minor_lo", device_id=None),
+                name="Debug Minor Low Byte",
+                native_value=0x00,
+            ),
+            DeviceKey(key="debug_tx_power", device_id=None): SensorValue(
+                device_key=DeviceKey(key="debug_tx_power", device_id=None),
+                name="Debug TX Power",
+                native_value=0,
             ),
         },
     )
