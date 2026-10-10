@@ -287,14 +287,16 @@ def test_parse_metrics_v2_no_velocity():
 RAPT_TEMP_UUID = bytes.fromhex("4b6567b722314977852625b74c616e64")
 
 
-def rapt_temp_service_info(raw_temperature: int) -> BluetoothServiceInfo:
+def rapt_temp_service_info(
+    raw_temperature: int, battery: int = 67, minor_low: int = 0
+) -> BluetoothServiceInfo:
     """Build a service info object matching a captured RAPT Temp iBeacon packet."""
     payload = (
         bytes.fromhex("4c00")
         + bytes.fromhex("0215")
         + RAPT_TEMP_UUID
         + struct.pack(">H", raw_temperature)
-        + bytes.fromhex("4300")
+        + bytes([battery, minor_low])
         + bytes.fromhex("00")
     )
     return bytes_to_service_info(payload)
@@ -333,33 +335,18 @@ def test_parse_rapt_temperature():
                 device_class=DeviceClass.TEMPERATURE,
                 native_unit_of_measurement=Units.TEMP_CELSIUS,
             ),
+            DeviceKey(key="battery", device_id=None): SensorDescription(
+                device_key=DeviceKey(key="battery", device_id=None),
+                device_class=DeviceClass.BATTERY,
+                native_unit_of_measurement=Units.PERCENTAGE,
+            ),
             DeviceKey(key="signal_strength", device_id=None): SensorDescription(
                 device_key=DeviceKey(key="signal_strength", device_id=None),
                 device_class=DeviceClass.SIGNAL_STRENGTH,
                 native_unit_of_measurement=Units.SIGNAL_STRENGTH_DECIBELS_MILLIWATT,
             ),
-            DeviceKey(key="debug_raw_major", device_id=None): SensorDescription(
-                device_key=DeviceKey(key="debug_raw_major", device_id=None),
-                device_class=DeviceClass.DEBUG,
-                native_unit_of_measurement=None,
-            ),
-            DeviceKey(key="debug_raw_minor", device_id=None): SensorDescription(
-                device_key=DeviceKey(key="debug_raw_minor", device_id=None),
-                device_class=DeviceClass.DEBUG,
-                native_unit_of_measurement=None,
-            ),
-            DeviceKey(key="debug_minor_hi", device_id=None): SensorDescription(
-                device_key=DeviceKey(key="debug_minor_hi", device_id=None),
-                device_class=DeviceClass.DEBUG,
-                native_unit_of_measurement=None,
-            ),
             DeviceKey(key="debug_minor_lo", device_id=None): SensorDescription(
                 device_key=DeviceKey(key="debug_minor_lo", device_id=None),
-                device_class=DeviceClass.DEBUG,
-                native_unit_of_measurement=None,
-            ),
-            DeviceKey(key="debug_tx_power", device_id=None): SensorDescription(
-                device_key=DeviceKey(key="debug_tx_power", device_id=None),
                 device_class=DeviceClass.DEBUG,
                 native_unit_of_measurement=None,
             ),
@@ -370,38 +357,32 @@ def test_parse_rapt_temperature():
                 name="Temperature",
                 native_value=33.51,
             ),
+            DeviceKey(key="battery", device_id=None): SensorValue(
+                device_key=DeviceKey(key="battery", device_id=None),
+                name="Battery",
+                native_value=67,
+            ),
             DeviceKey(key="signal_strength", device_id=None): SensorValue(
                 device_key=DeviceKey(key="signal_strength", device_id=None),
                 name="Signal Strength",
                 native_value=-60,
             ),
-            DeviceKey(key="debug_raw_major", device_id=None): SensorValue(
-                device_key=DeviceKey(key="debug_raw_major", device_id=None),
-                name="Debug Raw Major",
-                native_value=0x4CAA,
-            ),
-            DeviceKey(key="debug_raw_minor", device_id=None): SensorValue(
-                device_key=DeviceKey(key="debug_raw_minor", device_id=None),
-                name="Debug Raw Minor",
-                native_value=0x4300,
-            ),
-            DeviceKey(key="debug_minor_hi", device_id=None): SensorValue(
-                device_key=DeviceKey(key="debug_minor_hi", device_id=None),
-                name="Debug Minor High Byte",
-                native_value=0x43,
-            ),
             DeviceKey(key="debug_minor_lo", device_id=None): SensorValue(
                 device_key=DeviceKey(key="debug_minor_lo", device_id=None),
                 name="Debug Minor Low Byte",
-                native_value=0x00,
-            ),
-            DeviceKey(key="debug_tx_power", device_id=None): SensorValue(
-                device_key=DeviceKey(key="debug_tx_power", device_id=None),
-                name="Debug TX Power",
                 native_value=0,
             ),
         },
     )
+
+
+def test_rapt_temperature_battery_percentage():
+    device = RAPTTemperatureBluetoothDeviceData()
+    result = device.update(rapt_temp_service_info(0x4CAA, battery=64))
+
+    assert result.entity_values[
+        DeviceKey(key="battery", device_id=None)
+    ].native_value == 64
 
 
 def test_rapt_temperature_rejects_other_ibeacon_uuid():
