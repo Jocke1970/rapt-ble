@@ -26,6 +26,6 @@
   "integration_type": "device",
   "iot_class": "local_push",
   "requirements": [
-    "rapt-ble @ https://github.com/Jocke1970/rapt-ble/archive/4ba24f09f03045f65d8b96bbecddfbe3e0a97bc9.zip"
+    "rapt-ble@git+https://github.com/Jocke1970/rapt-ble.git@4ba24f09f03045f65d8b96bbecddfbe3e0a97bc9"
   ]
 }
