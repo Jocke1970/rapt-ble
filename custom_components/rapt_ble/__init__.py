@@ -4,7 +4,6 @@ import logging
 from collections.abc import Callable
 
 from home_assistant_bluetooth import BluetoothServiceInfo
-
 from homeassistant.components.bluetooth import BluetoothScanningMode
 from homeassistant.components.bluetooth.passive_update_processor import (
     PassiveBluetoothProcessorCoordinator,
