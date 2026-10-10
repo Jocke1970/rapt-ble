@@ -23,7 +23,7 @@ PLATFORMS: list[Platform] = [Platform.SENSOR]
 
 _LOGGER = logging.getLogger(__name__)
 
-type RAPTBLEConfigEntry = ConfigEntry[PassiveBluetoothProcessorCoordinator]
+RAPTBLEConfigEntry = ConfigEntry[PassiveBluetoothProcessorCoordinator]
 
 
 def _combined_update_method() -> Callable[[BluetoothServiceInfo], SensorUpdate | None]:

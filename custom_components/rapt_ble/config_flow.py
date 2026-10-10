@@ -3,7 +3,6 @@
 from typing import Any, override
 
 import probatio
-
 from homeassistant.components import bluetooth
 from homeassistant.components.bluetooth import (
     BluetoothServiceInfoBleak,

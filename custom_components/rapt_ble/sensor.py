@@ -2,8 +2,6 @@
 
 from typing import override
 
-from rapt_ble import DeviceClass, DeviceKey, SensorUpdate, Units
-
 from homeassistant.components.bluetooth.passive_update_processor import (
     PassiveBluetoothDataProcessor,
     PassiveBluetoothDataUpdate,
@@ -25,6 +23,8 @@ from homeassistant.const import (
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 from homeassistant.helpers.sensor import sensor_device_info_to_hass_device_info
+
+from rapt_ble import DeviceClass, DeviceKey, SensorUpdate, Units
 
 from . import RAPTBLEConfigEntry
 
@@ -106,7 +106,9 @@ def sensor_update_to_bluetooth_data_update(
             description.native_unit_of_measurement,
         )
         if ha_description is not None:
-            descriptions[_device_key_to_bluetooth_entity_key(device_key)] = (\n                ha_description\n            )
+            descriptions[_device_key_to_bluetooth_entity_key(device_key)] = (
+                ha_description
+            )
 
     return PassiveBluetoothDataUpdate(
         devices={
