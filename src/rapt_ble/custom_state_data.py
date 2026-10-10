@@ -21,6 +21,10 @@ class DeviceClass(sensor_state_data.BaseDeviceClass):
 
     SPECIFIC_GRAVITY_VELOCITY = "specific_gravity_velocity"
 
+    # Temporary reverse-engineering fields used while analysing the
+    # RAPT Bluetooth Thermometer iBeacon payload.
+    DEBUG = "debug"
+
 
 class Units(sensor_state_data.enum.StrEnum):
     # inherited fields
