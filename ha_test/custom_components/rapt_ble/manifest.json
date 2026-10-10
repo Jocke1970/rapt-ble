@@ -1,0 +1,31 @@
+{
+  "domain": "rapt_ble",
+  "name": "RAPT Bluetooth Beta Test",
+  "version": "2026.10.10-beta-test",
+  "bluetooth": [
+    {
+      "manufacturer_data_start": [80, 84],
+      "manufacturer_id": 16722
+    },
+    {
+      "manufacturer_data_start": [71],
+      "manufacturer_id": 17739
+    },
+    {
+      "manufacturer_data_start": [
+        2, 21, 75, 101, 103, 183, 34, 49, 73, 119,
+        133, 38, 37, 183, 76, 97, 110, 100
+      ],
+      "manufacturer_id": 76
+    }
+  ],
+  "codeowners": [],
+  "config_flow": true,
+  "dependencies": ["bluetooth_adapters"],
+  "documentation": "https://www.home-assistant.io/integrations/rapt_ble",
+  "integration_type": "device",
+  "iot_class": "local_push",
+  "requirements": [
+    "rapt-ble @ https://github.com/Jocke1970/rapt-ble/archive/4ba24f09f03045f65d8b96bbecddfbe3e0a97bc9.zip"
+  ]
+}
