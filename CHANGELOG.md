@@ -4,12 +4,17 @@
 
 ## Unreleased
 
+### Fix
+
+* Ignore the additional 24-byte PT-prefixed payload emitted by newer RAPT Pill firmware without logging it as an error.
+
 ### Feature
 
 * Add initial support for the RAPT Bluetooth Thermometer iBeacon advertisements.
 * Decode thermometer temperature from fixed-point Kelvin and expose it in Celsius.
 * Decode thermometer battery percentage from the high byte of the iBeacon minor field.
 * Keep the low byte of the iBeacon minor field exposed as a temporary debug diagnostic while its meaning is still unknown.
+* Document the verified thermometer payload layout and upstream cleanup plan.
 * Add regression tests based on captured RAPT Bluetooth Thermometer advertisements.
 * Preserve existing RAPT Pill parser behaviour.
 
