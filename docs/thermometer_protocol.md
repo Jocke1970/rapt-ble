@@ -18,14 +18,14 @@ The iBeacon UUID observed on the physical thermometer is:
 
 The manufacturer payload after the manufacturer ID is 23 bytes:
 
-| Offset | Length | iBeacon field | RAPT interpretation | Status |
-| --- | ---: | --- | --- | --- |
-| 0-1 | 2 | Header | `02 15` | Verified |
-| 2-17 | 16 | UUID | RAPT thermometer UUID | Verified |
-| 18-19 | 2 | Major | Temperature raw value | Verified |
-| 20 | 1 | Minor high byte | Battery percentage | Verified |
-| 21 | 1 | Minor low byte | Unknown / reserved | Unknown |
-| 22 | 1 | TX power | Standard iBeacon field | Observed as `0` |
+| Offset | Length | iBeacon field   | RAPT interpretation    | Status          |
+| ------ | -----: | --------------- | ---------------------- | --------------- |
+| 0-1    |      2 | Header          | `02 15`                | Verified        |
+| 2-17   |     16 | UUID            | RAPT thermometer UUID  | Verified        |
+| 18-19  |      2 | Major           | Temperature raw value  | Verified        |
+| 20     |      1 | Minor high byte | Battery percentage     | Verified        |
+| 21     |      1 | Minor low byte  | Unknown / reserved     | Unknown         |
+| 22     |      1 | TX power        | Standard iBeacon field | Observed as `0` |
 
 All multi-byte iBeacon major/minor values are read big-endian.
 
@@ -40,12 +40,12 @@ temperature_c = raw_major / 64 - 273.15
 Examples observed during hardware testing:
 
 | Raw major | Decoded temperature |
-| ---: | ---: |
-| 19274 | 28.01 °C |
-| 19600 | 33.10 °C |
-| 19606 | 33.19 °C |
-| 19613 | 33.30 °C |
-| 19619 | 33.40 °C |
+| --------: | ------------------: |
+|     19274 |            28.01 °C |
+|     19600 |            33.10 °C |
+|     19606 |            33.19 °C |
+|     19613 |            33.30 °C |
+|     19619 |            33.40 °C |
 
 The decoded values track the Home Assistant temperature sensor and physical
 temperature changes as expected.
