@@ -4,6 +4,10 @@
 
 ## Unreleased
 
+### Fix
+
+* Ignore the additional 24-byte PT-prefixed payload emitted by newer RAPT Pill firmware without logging it as an error.
+
 ### Feature
 
 * Add initial support for the RAPT Bluetooth Thermometer iBeacon advertisements.

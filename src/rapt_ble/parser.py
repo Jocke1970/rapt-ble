@@ -252,6 +252,18 @@ class RAPTPillBluetoothDeviceData(BluetoothData):
             _LOGGER.debug("Ignoring 'RAPTdPillG1' payload")
             return
 
+        if len(data) == 24:
+            # Newer RAPT Pill firmware emits an additional 24-byte PT-prefixed
+            # advertisement alongside the existing 23-byte telemetry packets.
+            # The regular telemetry continues to use the known v1/v2 format,
+            # so keep this auxiliary frame available at debug level without
+            # treating it as a parser error.
+            _LOGGER.debug(
+                "Ignoring 24-byte RAPT Pill auxiliary payload: %s",
+                data,
+            )
+            return
+
         if len(data) != 23:
             _LOGGER.error("Unknown RAPT payload: %s", data)
             return

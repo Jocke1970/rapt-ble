@@ -61,6 +61,20 @@ def test_device_supported(data_bytes):
     assert device.supported(data)
 
 
+def test_ignore_new_firmware_auxiliary_payload(caplog):
+    """Ignore the 24-byte auxiliary frame emitted by newer Pill firmware."""
+    device = RAPTPillBluetoothDeviceData()
+    data = bytes_to_service_info(
+        b"RAPT\xb7\x88\x13\xbf\xc4i\xf8\x01\xff\xff\xff\xff"
+        b"\x80\x00\xff\xff\x01\x06\x02\x00\x00\x09"
+    )
+
+    device.update(data)
+
+    assert "Ignoring 24-byte RAPT Pill auxiliary payload" in caplog.text
+    assert "Unknown RAPT payload" not in caplog.text
+
+
 def test_parse_version():
     device = RAPTPillBluetoothDeviceData()
     data = bytes_to_service_info(b"KEG20220612_050156_81c6d1")
